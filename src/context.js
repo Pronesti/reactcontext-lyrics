@@ -3,11 +3,25 @@ import axios from 'axios';
 
 const Context = React.createContext();
 
+const reducer = (state, action) => {
+    switch(action.type){
+        case 'SEARCH_TRACKS':
+            return {
+                ...state,
+                track_list: action.payload,
+                heading: 'Search Results'
+            }
+        default:
+            return state;
+    }
+}
+
 export class Provider extends Component {
     state={
         track_list: [],
-        heading: 'Top 10 tracks'
-    }
+        heading: 'Top 10 tracks',
+        dispatch: action => this.setState(state => reducer(state, action))
+    };
 
     componentDidMount() {
         axios.get(`https://cors-anywhere.herokuapp.com/https://api.musixmatch.com/ws/1.1/chart.tracks.get?chart_name=top&page=1&page_size=10&country=us&f_has_lyrics=1&apikey=a7c365fd79b9c3ff7a81496c5493a4e1`)
